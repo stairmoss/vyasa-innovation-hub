@@ -43,17 +43,10 @@ const team = {
 const events = [
   {
     id: 1,
-    title: "Upcoming Event 1",
-    date: "Coming Soon",
-    desc: "A deep dive into future tech.",
-    status: "Upcoming",
-  },
-  {
-    id: 2,
-    title: "Upcoming Event 2",
-    date: "March 2025",
-    desc: "A major upcoming exhibition.",
-    status: "Planning",
+    title: "Mission Updates",
+    date: "Current Status",
+    desc: "No upcoming events scheduled at this moment. Stay tuned for new missions!",
+    status: "Standby",
   },
 ];
 
