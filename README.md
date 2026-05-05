@@ -86,3 +86,5 @@ https://github.com/stairmoss
 ## Note
 
 This project is made for educational purposes and to promote innovation and creativity in schools.
+
+pls Star 
