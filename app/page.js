@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { Calendar, Users, Trophy, ChevronDown, Rocket } from "lucide-react";
 import TiltCard from "@/components/TiltCard";
 
@@ -51,18 +50,20 @@ const events = [
 ];
 
 export default function Home() {
-  const router = useRouter();
-  const { scrollYProgress } = useScroll();
   const [userName, setUserName] = useState("");
+  const [nameError, setNameError] = useState("");
 
   const handleJoin = (e) => {
     e.preventDefault();
     const trimmedName = userName.trim();
-    if (trimmedName) {
-      localStorage.setItem("vih_user_name", trimmedName);
-      // Force direct browser navigation for maximum reliability
-      window.location.assign("/toolbox");
+    if (!trimmedName) {
+      setNameError("Please enter your name.");
+      return;
     }
+
+    localStorage.setItem("vih_user_name", trimmedName);
+    // Force direct browser navigation for maximum reliability
+    window.location.assign("/toolbox");
   };
   return (
     <main className="min-h-screen flex flex-col items-center bg-transparent">
@@ -131,15 +132,33 @@ export default function Home() {
               <h3 className="text-2xl font-black mb-2 tracking-tight">JOIN THE MOVEMENT</h3>
               <p className="text-gray-400 text-xs mb-6 font-mono tracking-widest uppercase opacity-60">Enter your name to initialize hub access.</p>
 
-              <form onSubmit={handleJoin} className="flex flex-col gap-4">
+              <form onSubmit={handleJoin} noValidate className="flex flex-col gap-4">
+                <label htmlFor="join-name" className="text-sm font-mono text-gray-300">
+                  Name
+                </label>
                 <input
+                  id="join-name"
                   type="text"
                   placeholder="NAME"
-                  required
                   value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
+                  aria-invalid={Boolean(nameError)}
+                  aria-describedby={nameError ? "join-name-error" : "join-name-hint"}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setUserName(value);
+                    if (value.trim()) setNameError("");
+                  }}
                   className="bg-black/40 border border-white/10 rounded-xl px-5 py-3 text-white focus:outline-none focus:border-[var(--primary-accent)] transition-all font-mono placeholder:text-gray-700"
                 />
+                {nameError ? (
+                  <p id="join-name-error" role="alert" className="text-sm text-red-300">
+                    {nameError}
+                  </p>
+                ) : (
+                  <span id="join-name-hint" className="sr-only">
+                    Enter your name to initialize hub access.
+                  </span>
+                )}
                 <button
                   type="submit"
                   className="w-full bg-[#ffffff] hover:bg-[#eeeeee] text-black font-black py-4 rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_20px_rgba(255,255,255,0.3)] uppercase tracking-tighter"
